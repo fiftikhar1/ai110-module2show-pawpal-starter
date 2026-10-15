@@ -1,4 +1,7 @@
+from datetime import time
+
 import streamlit as st
+from scheduler import create_daily_plan
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
@@ -43,6 +46,12 @@ owner_name = st.text_input("Owner name", value="Jordan")
 pet_name = st.text_input("Pet name", value="Mochi")
 species = st.selectbox("Species", ["dog", "cat", "other"])
 
+availability_col1, availability_col2 = st.columns(2)
+with availability_col1:
+    available_start = st.time_input("Available from", value=time(8, 0))
+with availability_col2:
+    available_end = st.time_input("Available until", value=time(17, 0))
+
 st.markdown("### Tasks")
 st.caption("Add a few tasks. In your final version, these should feed into your scheduler.")
 
@@ -71,18 +80,37 @@ else:
 st.divider()
 
 st.subheader("Build Schedule")
-st.caption("This button should call your scheduling logic once you implement it.")
+st.caption("Tasks are scheduled by priority within the owner's available hours.")
 
 if st.button("Generate schedule"):
-    st.warning(
-        "Not implemented yet. Next step: create your scheduling logic (classes/functions) and call it here."
-    )
-    st.markdown(
-        """
-Suggested approach:
-1. Design your UML (draft).
-2. Create class stubs (no logic).
-3. Implement scheduling behavior.
-4. Connect your scheduler here and display results.
-"""
-    )
+    if available_end <= available_start:
+        st.error("Available until must be later than Available from.")
+    elif not st.session_state.tasks:
+        st.info("Add at least one care task to build a schedule.")
+    else:
+        scheduled_tasks, unscheduled_tasks = create_daily_plan(
+            st.session_state.tasks,
+            available_start,
+            available_end,
+        )
+
+        if scheduled_tasks:
+            st.write(f"Daily plan for {owner_name} and {pet_name} ({species})")
+            st.table(
+                [
+                    {
+                        "Start": task["start_time"],
+                        "Task": task["title"],
+                        "Duration (minutes)": task["duration_minutes"],
+                        "Priority": task["priority"],
+                        "End": task["end_time"],
+                    }
+                    for task in scheduled_tasks
+                ]
+            )
+        else:
+            st.warning("No tasks fit within the selected availability window.")
+
+        if unscheduled_tasks:
+            st.warning("These tasks did not fit and were left unscheduled:")
+            st.table(unscheduled_tasks)

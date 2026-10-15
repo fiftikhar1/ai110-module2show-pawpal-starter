@@ -1,15 +1,20 @@
 # PawPal+ Project Reflection
 
 ## 1. System Design
+- Track pet care tasks (walks, feeding, meds, enrichment, grooming, etc.)
+- Consider constraints (time available, priority, owner preferences)
+- Produce a daily plan and explain why it chose that plan
 
 **a. Initial design**
 
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
 
+The PawPal+ UML design consists of four classes: Owner, Pet, Task, and Scheduler. The Owner class stores the owner's information, availability, and preferences, while the Pet class stores pet details and manages its care tasks. The Task class represents individual activities, including their duration, priority, deadlines, and scheduled times. The Scheduler class coordinates these classes by organizing tasks, checking availability, detecting conflicts, and creating a daily care plan. Together, these classes use object-oriented design principles to make the system organized, reusable, and easy to maintain.
+
 **b. Design changes**
 
-- Did your design change during implementation?
+- Did your design change during implementation? no
 - If yes, describe at least one change and why you made it.
 
 ---
@@ -34,11 +39,13 @@
 
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
 - What kinds of prompts or questions were most helpful?
+I think telling the AI exactly what I need to do and what it needs to generate was key. The incorporated ai into VS did all the work!
 
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
 - How did you evaluate or verify what the AI suggested?
+I let the AI do its thing, and tested it to see if it did what I wanted.
 
 ---
 
